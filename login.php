@@ -7,7 +7,7 @@ $dotenv->load();
 
 use App\Repositories\UserRepository;
 
-// Ila kan m-connecté aslan, nsiftoh l'index
+
 if (isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit;
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $userRepo->login($email, $password);
 
     if ($user) {
-        // Kan-sjlau l'm3lomat f la Session
+
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_name'] = $user->getName();
         $_SESSION['user_role'] = $user->getRole();
