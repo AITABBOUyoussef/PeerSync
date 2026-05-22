@@ -12,11 +12,11 @@ class Database
     {
         if ($this->conn === null) {
             try {
-                // Kan-jbdou l'm3lomat mn l'fichier .env
-                $host = $_ENV['DB_HOST'];
-                $db_name = $_ENV['DB_NAME'];
-                $username = $_ENV['DB_USER'];
-                $password = $_ENV['DB_PASS'];
+                // L'fix hna: kan9raw mn $_SERVER, w ila mal9inahch kandiro les valeurs par défaut
+                $host = $_ENV['DB_HOST'] ?? $_SERVER['DB_HOST'] ?? 'localhost';
+                $db_name = $_ENV['DB_NAME'] ?? $_SERVER['DB_NAME'] ?? 'peersync';
+                $username = $_ENV['DB_USER'] ?? $_SERVER['DB_USER'] ?? 'root';
+                $password = $_ENV['DB_PASS'] ?? $_SERVER['DB_PASS'] ?? '';
 
                 $dsn = "mysql:host=" . $host . ";dbname=" . $db_name . ";charset=utf8mb4";
 

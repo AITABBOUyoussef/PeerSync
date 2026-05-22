@@ -1,20 +1,24 @@
 <?php
 
 require_once __DIR__ . '/vendor/autoload.php';
+use App\Repositories\HelpRequestRepository;
+use App\Repositories\TagRepository;
 
+$requestRepo = new HelpRequestRepository();
+$tagRepo = new TagRepository();
+$tags = $tagRepo->getAllTags();
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-use App\Repositories\HelpRequestRepository;
 
-$requestRepo = new HelpRequestRepository();
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_request'])) {
     $title = $_POST['title'];
     $description = $_POST['description'];
 
     $apprenantId = 1;
-    $tagId = 1;
+    $tagId = (int) $_POST['tag_id'];
 
     $requestRepo->createRequest($title, $description, $apprenantId, $tagId);
 
@@ -65,6 +69,15 @@ $pendingRequests = $requestRepo->getPendingRequests();
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                     <textarea name="description" required rows="4" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Explique ton blocage..."></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Compétence concernée</label>
+                    <select name="tag_id" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                        <option value="">Sélectionner une technologie...</option>
+                        <?php foreach ($tags as $tag): ?>
+                            <option value="<?php echo $tag['id']; ?>"><?php echo htmlspecialchars($tag['name']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <button type="submit" name="submit_request" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
                     Publier la demande
