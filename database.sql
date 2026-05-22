@@ -72,3 +72,9 @@ INSERT INTO badges (title, icon_path, min_points) VALUES
                                                       ('Débutant', '/assets/badges/debutant.png', 10),
                                                       ('Expert POO', '/assets/badges/expert_poo.png', 50),
                                                       ('Sauveur de la semaine', '/assets/badges/sauveur.png', 100);
+
+INSERT INTO users (id, name, email, password, role)
+VALUES (1, 'Youssef', 'youssef@enaa.ma', '123456', 'APPRENANT');
+
+INSERT INTO tags (id, name)
+VALUES (1, 'PHP');
