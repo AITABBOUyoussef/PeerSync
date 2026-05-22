@@ -1,5 +1,10 @@
 <?php
+session_start();
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
 require_once __DIR__ . '/vendor/autoload.php';
 use App\Repositories\HelpRequestRepository;
 use App\Repositories\TagRepository;
@@ -17,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_request'])) {
     $title = $_POST['title'];
     $description = $_POST['description'];
 
-    $apprenantId = 1;
+    $apprenantId = $_SESSION['user_id'];
     $tagId = (int) $_POST['tag_id'];
 
     $requestRepo->createRequest($title, $description, $apprenantId, $tagId);
@@ -29,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_request'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accept_request'])) {
     $requestId = (int) $_POST['request_id'];
 
-   $tuteurId = 1;
+    $tuteurId = $_SESSION['user_id'];
 
     $requestRepo->acceptRequest($requestId, $tuteurId);
 
@@ -53,8 +58,19 @@ $pendingRequests = $requestRepo->getPendingRequests();
 <div class="max-w-5xl mx-auto">
 
     <header class="flex justify-between items-center mb-10">
-        <h1 class="text-3xl font-bold text-blue-600">PeerSync ENAA</h1>
-        <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">Mode MVP</span>
+        <div class="flex items-center gap-4">
+            <h1 class="text-3xl font-bold text-blue-600">PeerSync ENAA</h1>
+            <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">Mode MVP</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+        <span class="text-sm font-medium text-gray-700">
+            👋 Salut, <?php echo htmlspecialchars($_SESSION['user_name']); ?>
+        </span>
+            <a href="logout.php" class="text-sm bg-red-50 text-red-600 hover:bg-red-100 font-semibold px-4 py-2 rounded-lg transition duration-200">
+                Déconnexion
+            </a>
+        </div>
     </header>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">

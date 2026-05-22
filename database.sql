@@ -75,6 +75,9 @@ INSERT INTO badges (title, icon_path, min_points) VALUES
 
 INSERT INTO users (id, name, email, password, role)
 VALUES (1, 'Youssef', 'youssef@enaa.ma', '123456', 'APPRENANT');
+INSERT INTO users (id, name, email, password, role)
+VALUES (2, 'billal', 'billal@enaa.ma', '123456', 'APPRENANT');
+
 
 INSERT INTO tags (id, name)
 VALUES (1, 'PHP');
