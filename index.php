@@ -1,5 +1,5 @@
 <?php
-// 1. Kan-chargew l'Autoload w .env
+
 require_once __DIR__ . '/vendor/autoload.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -9,24 +9,30 @@ use App\Repositories\HelpRequestRepository;
 
 $requestRepo = new HelpRequestRepository();
 
-// 2. Traitement dyal l'formulaire (Ila l'mota3alim sift demande jdida)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_request'])) {
     $title = $_POST['title'];
     $description = $_POST['description'];
 
-    // F l'MVP lyoum, ghadi n-simuliw bli l'étudiant li m-connecté ID dyalo howa 1
-    // w khtar l'compétence (Tag) li ID dyalha 1 (Matalan PHP)
     $apprenantId = 1;
     $tagId = 1;
 
     $requestRepo->createRequest($title, $description, $apprenantId, $tagId);
 
-    // Kan-rediriw l'page bach mayb9ach l'formulaire m3lwe9
     header("Location: index.php");
     exit;
 }
 
-// 3. Njbdou ga3 les demandes mn la base de données bach n-affichiwhom
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accept_request'])) {
+    $requestId = (int) $_POST['request_id'];
+
+   $tuteurId = 1;
+
+    $requestRepo->acceptRequest($requestId, $tuteurId);
+
+    header("Location: index.php");
+    exit;
+}
+
 $pendingRequests = $requestRepo->getPendingRequests();
 ?>
 
@@ -85,9 +91,13 @@ $pendingRequests = $requestRepo->getPendingRequests();
                                     <span>Créé le : <?php echo date('d/m/Y H:i', strtotime($request['created_at'])); ?></span>
                                 </div>
                             </div>
-                            <button class="bg-green-100 text-green-700 hover:bg-green-200 font-semibold py-2 px-4 rounded-lg text-sm transition duration-200">
-                                Aider
-                            </button>
+
+                            <form method="POST" action="">
+                                <input type="hidden" name="request_id" value="<?php echo $request['id']; ?>">
+                                <button type="submit" name="accept_request" class="bg-green-100 text-green-700 hover:bg-green-200 font-semibold py-2 px-4 rounded-lg text-sm transition duration-200">
+                                    Aider
+                                </button>
+                            </form>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
